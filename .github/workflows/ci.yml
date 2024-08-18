@@ -1,0 +1,39 @@
+name: ci
+on:
+  push:
+    branches:
+      - main
+jobs:
+  tasks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Shutdown Ubuntu MySQL
+        run: |
+          sudo service mysql stop
+          sudo apt-get remove --purge mysql-server mysql-client mysql-common -y
+          sudo apt-get autoremove -y
+          sudo apt-get autoclean
+          sudo rm -rf /etc/mysql
+          sudo rm -rf /var/lib/mysql
+      - name: Setup Fluent CI
+        uses: fluentci-io/setup-fluentci@v5
+        with:
+          wasm: true
+          plugin: mariadb
+          args: start
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MARIADB_USER: user
+          MARIADB_PASSWORD: password
+          MARIADB_DATABASE: example_text
+      - name: test
+        run: |
+          fluentci run --wasm elixir test
+          fluentci run --wasm elixir compile
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MYSQL_DATABASE: example_text
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+          MYSQL_HOST: 127.0.0.1
