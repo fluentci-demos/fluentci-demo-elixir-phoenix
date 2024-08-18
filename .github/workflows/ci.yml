@@ -26,14 +26,13 @@ jobs:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           MARIADB_USER: user
           MARIADB_PASSWORD: password
-          MARIADB_DATABASE: example_text
+          MARIADB_DATABASE: example_test
       - name: test
         run: |
           fluentci run --wasm elixir test
           fluentci run --wasm elixir compile
         env:
           GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MYSQL_DATABASE: example_text
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
+          MYSQL_DATABASE: example_test
+          MYSQL_USER: root
           MYSQL_HOST: 127.0.0.1
