@@ -1,0 +1,20 @@
+[[steps]]
+name = "Start MariaDB"
+command = ["fluentci run --wasm mariadb start"]
+env = [
+  "MARIADB_USER=user",
+  "MARIADB_PASSWORD=password",
+  "MARIADB_DATABASE= example_test",
+]
+
+[[steps]]
+name = "Run tests"
+command = [
+  "fluentci run --wasm elixir test",
+  "fluentci run --wasm elixir compile",
+]
+env = [
+  "MYSQL_DATABASE=exampple_test",
+  "MYSQL_USER=root",
+  "MYSQL_HOST=127.0.0.1",
+]
